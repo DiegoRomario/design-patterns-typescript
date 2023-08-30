@@ -1,16 +1,46 @@
 import { Component } from '@angular/core';
-import { displayAccountDetails } from './creational-patterns/abstract-factory/client'
-import { BasicBankingFactory, PremiumBankingFactory } from './creational-patterns/abstract-factory/concrete-factories';
+import { HttpRequestBuilder } from './creational-patterns/builder/abstract-builder';
+import { HtmlRequestDirector } from './creational-patterns/builder/director';
+import { ConcreteHttpRequestBuilder } from './creational-patterns/builder/concrete-builder';
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
-  basicFactory = new BasicBankingFactory();
-  premiumFactory = new PremiumBankingFactory();
+  // Usage
+  builder: HttpRequestBuilder = new ConcreteHttpRequestBuilder();
+  director: HtmlRequestDirector = new HtmlRequestDirector(this.builder);
 
   constructor() {
-    displayAccountDetails(this.basicFactory); // Output: Checking Account with 0.05% interest rate
-    displayAccountDetails(this.premiumFactory); // Output: Savings Account with 0.09% interest rate
+    const simpleHtmlRequest = this.director.buildSimpleHtmlRequest('/home');
+    const htmlRequestWithToken = this.director.buildHtmlRequestWithToken(
+      '/profile',
+      'myAuthToken'
+    );
+    /* Output: simpleHtmlRequest
+      {
+        "method":"GET",
+        "baseURL":"https://api.example.com",
+        "endpoint":"/home",
+        "headers":{
+          "Content-Type":"text/html"
+        },
+        "body":null
+      }
+    */
+    console.table(simpleHtmlRequest);
+    /* Output:htmlRequestWithToken
+      {
+        "method":"GET",
+        "baseURL":"https://api.example.com",
+        "endpoint":"/profile",
+        "headers":{
+            "Content-Type":"text/html",
+            "Authorization":"Bearer myAuthToken"
+        },
+        "body":null
+      } 
+    */
+    console.table(htmlRequestWithToken);
   }
 }
