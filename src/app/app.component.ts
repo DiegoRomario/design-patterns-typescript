@@ -1,46 +1,25 @@
 import { Component } from '@angular/core';
-import { HttpRequestBuilder } from './creational-patterns/builder/abstract-builder';
-import { HtmlRequestDirector } from './creational-patterns/builder/director';
-import { ConcreteHttpRequestBuilder } from './creational-patterns/builder/concrete-builder';
+import {
+  OracleProviderFactory,
+  SQLProviderFactory,
+} from './creational-patterns/factory-method/concrete-creators';
+import { ClientDBProvider } from './creational-patterns/factory-method/client';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  // Usage
-  builder: HttpRequestBuilder = new ConcreteHttpRequestBuilder();
-  director: HtmlRequestDirector = new HtmlRequestDirector(this.builder);
-
   constructor() {
-    const simpleHtmlRequest = this.director.buildSimpleHtmlRequest('/home');
-    const htmlRequestWithToken = this.director.buildHtmlRequestWithToken(
-      '/profile',
-      'myAuthToken'
-    );
-    /* Output: simpleHtmlRequest
-      {
-        "method":"GET",
-        "baseURL":"https://api.example.com",
-        "endpoint":"/home",
-        "headers":{
-          "Content-Type":"text/html"
-        },
-        "body":null
-      }
-    */
-    console.table(simpleHtmlRequest);
-    /* Output:htmlRequestWithToken
-      {
-        "method":"GET",
-        "baseURL":"https://api.example.com",
-        "endpoint":"/profile",
-        "headers":{
-            "Content-Type":"text/html",
-            "Authorization":"Bearer myAuthToken"
-        },
-        "body":null
-      } 
-    */
-    console.table(htmlRequestWithToken);
+    // Usage
+    const sqlFactory = new SQLProviderFactory();
+    const oracleFactory = new OracleProviderFactory();
+
+    const sqlClientDBProvider = new ClientDBProvider(sqlFactory);
+    sqlClientDBProvider.connect();
+    sqlClientDBProvider.execQuery('SELECT * FROM CLIENT');
+
+    const oracleClientDBProvider = new ClientDBProvider(oracleFactory);
+    oracleClientDBProvider.connect();
+    oracleClientDBProvider.execQuery('SELECT * FROM CLIENT');
   }
 }
