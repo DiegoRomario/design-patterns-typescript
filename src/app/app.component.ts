@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { UserSessionManager } from './creational-patterns/singleton/singleton';
+import { PayPalAdapter, StripeAdapter } from './structural-patterns/adapter/adapters';
+import { PaymentClient } from './structural-patterns/adapter/client';
+import { PayPalGateway, StripeGateway } from './structural-patterns/adapter/adaptees';
 
 @Component({
   selector: 'app-root',
@@ -7,19 +10,22 @@ import { UserSessionManager } from './creational-patterns/singleton/singleton';
 })
 export class AppComponent {
   constructor() {
-    // Usage example
-    const sessionManager = UserSessionManager.getInstance();
+    // Usage
+    const payPalGateway = new PayPalGateway();
+    const stripeGateway = new StripeGateway();
 
-    const user1SessionToken = sessionManager.createUserSession('user1');
-    const user2SessionToken = sessionManager.createUserSession('user2');
+    const paypalAdapter = new PayPalAdapter(payPalGateway);
+    const stripeAdapter = new StripeAdapter(stripeGateway);
 
-    console.log(sessionManager.getUserData(user1SessionToken)); // { userId: 'user1', sessionToken: 'session_token_xxx' }
-    console.log(sessionManager.getUserData(user2SessionToken)); // { userId: 'user2', sessionToken: 'session_token_xxx' }
+    const paypalClient = new PaymentClient(paypalAdapter);
+    const stripeClient = new PaymentClient(stripeAdapter);
 
-    sessionManager.endUserSession(user1SessionToken);
-    console.log(sessionManager.getUserData(user1SessionToken)); // undefined (session ended)
+    paypalClient.processPayment(100); /* Output - PayPal: Checking for fraudulent action
+                                     PayPal: Authorizing PayPal payment of $100
+                                     PayPal: Processing PayPal payment of $100 */
 
-    const sessionManager2 = UserSessionManager.getInstance();
-    console.log(sessionManager === sessionManager2); // Output: true (both instances are the same)
+    stripeClient.processPayment(150); /* Output - Stripe: Checking for fraudulent action
+                                     Stripe: Authorizing Stripe payment of $150
+                                     Stripe: Processing Stripe payment of $150 */
   }
 }
