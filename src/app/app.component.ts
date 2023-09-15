@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { UserSessionManager } from './creational-patterns/singleton/singleton';
-import { PayPalAdapter, StripeAdapter } from './structural-patterns/adapter/adapters';
-import { PaymentClient } from './structural-patterns/adapter/client';
-import { PayPalGateway, StripeGateway } from './structural-patterns/adapter/adaptees';
-
+import { NetflixPlayer, PrimeVideoPlayer } from './structural-patterns/bridge/refined-abstractions';
+import { FourKResolution, HDResolution } from "./structural-patterns/bridge/concrete-implementors";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -11,21 +8,23 @@ import { PayPalGateway, StripeGateway } from './structural-patterns/adapter/adap
 export class AppComponent {
   constructor() {
     // Usage
-    const payPalGateway = new PayPalGateway();
-    const stripeGateway = new StripeGateway();
+    const resolutionHD = new HDResolution();
+    const resolution4K = new FourKResolution();
 
-    const paypalAdapter = new PayPalAdapter(payPalGateway);
-    const stripeAdapter = new StripeAdapter(stripeGateway);
+    const netflixHD = new NetflixPlayer(resolutionHD);
+    netflixHD.play();
+    // Output - Netflix Video: Processing video for HD resolution... Streaming video...
 
-    const paypalClient = new PaymentClient(paypalAdapter);
-    const stripeClient = new PaymentClient(stripeAdapter);
+    const netflix4K = new NetflixPlayer(resolution4K);
+    netflix4K.play();
+    // Output - Netflix Video: Processing video for 4K resolution... Streaming video...
 
-    paypalClient.processPayment(100); /* Output - PayPal: Checking for fraudulent action
-                                     PayPal: Authorizing PayPal payment of $100
-                                     PayPal: Processing PayPal payment of $100 */
+    const primeVideoHD = new PrimeVideoPlayer(resolutionHD);
+    primeVideoHD.play();
+    // Output - Prime Video: Processing video for HD resolution... Streaming video...
 
-    stripeClient.processPayment(150); /* Output - Stripe: Checking for fraudulent action
-                                     Stripe: Authorizing Stripe payment of $150
-                                     Stripe: Processing Stripe payment of $150 */
+    const primeVideo4K = new PrimeVideoPlayer(resolution4K);
+    primeVideo4K.play();
+    // Output - Prime Video: Processing video for 4K resolution... Streaming video...
   }
 }
