@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NetflixPlayer, PrimeVideoPlayer } from './structural-patterns/bridge/refined-abstractions';
-import { FourKResolution, HDResolution } from "./structural-patterns/bridge/concrete-implementors";
+import { UIButton } from './structural-patterns/composite/leaf';
+import { UIForm, UITab } from './structural-patterns/composite/composites';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,23 +9,23 @@ import { FourKResolution, HDResolution } from "./structural-patterns/bridge/conc
 export class AppComponent {
   constructor() {
     // Usage
-    const resolutionHD = new HDResolution();
-    const resolution4K = new FourKResolution();
+    const btnSubmit = new UIButton("btnSubmit", { x: 10, y: 20 }, "Submit");
+    const btnCancel = new UIButton("btnCancel", { x: 30, y: 40 }, "Cancel");
+    const tabMain = new UITab("tabMain", { x: 50, y: 60 });
+    const form = new UIForm("formMain", { x: 5, y: 5 });
 
-    const netflixHD = new NetflixPlayer(resolutionHD);
-    netflixHD.play();
-    // Output - Netflix Video: Processing video for HD resolution... Streaming video...
+    tabMain.add(btnSubmit);
+    tabMain.add(btnCancel);
+    form.add(tabMain);
 
-    const netflix4K = new NetflixPlayer(resolution4K);
-    netflix4K.play();
-    // Output - Netflix Video: Processing video for 4K resolution... Streaming video...
+    // Move the Tab to a new position (X, Y)
+    tabMain.setPosition({ x: 70, y: 80 });
 
-    const primeVideoHD = new PrimeVideoPlayer(resolutionHD);
-    primeVideoHD.play();
-    // Output - Prime Video: Processing video for HD resolution... Streaming video...
-
-    const primeVideo4K = new PrimeVideoPlayer(resolution4K);
-    primeVideo4K.play();
-    // Output - Prime Video: Processing video for 4K resolution... Streaming video...
+    // Output:
+    // - formMain Form "formMain" at (5, 5)
+    // -- tabMain Tab "tabMain" at (70, 80)
+    // --- btnSubmit Button "Submit" at (10, 20)
+    // --- btnCancel Button "Cancel" at (30, 40)
+    form.show();
   }
 }
