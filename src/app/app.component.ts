@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { PlainText } from './structural-patterns/decorator/concrete-component';
-import { BoldTextDecorator, ItalicTextDecorator } from './structural-patterns/decorator/concrete-decorators';
+import { HardwareInteractionFacade } from './structural-patterns/facade/facade';
+import { HardwareDeviceA, HardwareDeviceB } from './structural-patterns/facade/sub-systems';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +9,19 @@ import { BoldTextDecorator, ItalicTextDecorator } from './structural-patterns/de
 export class AppComponent {
   constructor() {
 
-    // Usage
-    const plainText = new PlainText("Hello, World!");
+    const deviceA = new HardwareDeviceA();
+    const deviceB = new HardwareDeviceB();
+    const hardwareFacade = new HardwareInteractionFacade(deviceA, deviceB);
 
-    const italicText = new ItalicTextDecorator(plainText);
-    const boldText = new BoldTextDecorator(italicText);
-
-    console.log(boldText.format());
-    // Output: <b><i>Hello, World!</i></b>
-
+    // Initialize and perform hardware operation using the facade
+    hardwareFacade.initializeHardware();
+    hardwareFacade.performHardwareOperation();
+    /* Output:
+        Hardware Device A: Initializing
+        Hardware Device B: Initializing
+        Hardware Device C: Initializing
+        Hardware Device A: Reading data
+        Hardware Device B: Sending data
+        Hardware Device C: Performing operation */
   }
 }
