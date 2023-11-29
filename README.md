@@ -53,3 +53,9 @@ The Flyweight design pattern optimizes memory usage by sharing common, intrinsic
 ### [Proxy](https://github.com/DiegoRomario/design-patterns-typescript/tree/main/src/app/structural-patterns/proxy)
 
 The Proxy Design Pattern is a structural pattern that provides a surrogate or placeholder for another object, serving as a gatekeeper to regulate access to it. A proxy intervenes in the interaction with the original object, enabling you to execute actions either before or after the request is forwarded to the underlying object, thereby adding an extra layer of control and functionality.
+
+## Behavioral Patterns
+
+### [Chain of Responsibility](https://github.com/DiegoRomario/design-patterns-typescript/tree/main/src/app/behavioral-patterns/chain-of-responsibility)
+
+The Chain of Responsibility Design Pattern is a behavioral pattern that lets you pass requests along a chain of handlers. Upon receiving a request, each handler decides either to process the request or to pass it to the next handler in the chain.
